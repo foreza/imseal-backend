@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "NODE_ENV=development && node ./bin/www", 
+    "dev-migration-up": "NODE_ENV=development npx sequelize-cli db:migrate",
+    "dev-migration-down": "NODE_ENV=development npx sequelize-cli db:migrate:undo:all"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -12,6 +14,7 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
+    "pg": "^8.0.3",
     "sequelize": "^5.21.7"
   },
   "devDependencies": {

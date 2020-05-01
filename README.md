@@ -1,7 +1,35 @@
 # imseal-backend
 Backend API for the IMSEAL service
 
-## SESSION API:
+## Run Development environment
+
+### Create PostGres db
+
+Remember to update `config.json` with the appropriate postgres user/password credentials.
+If you don't have a config, initialize with: `sequelize init`
+
+### Run commands
+
+```bash
+npm install
+npm run dev-migration-down
+npm run dev-migration-up
+npm start
+```
+
+*If you want to use some initial seed data for sample users/pens:*
+
+```bash
+npm run dev-seed-down
+npm run dev-seed-up
+```
+
+## Project Requirements
+
+* PostGres (recommended: v12+)
+* Node.js (recommended: v12.14.+)
+
+## SESSION API
 
 ----
 
@@ -16,14 +44,13 @@ Backend API for the IMSEAL service
     'cellular': false,
     'OS': 'Android',
     `placement_id' : '380000',
-    'date_created': new Date(),
     'request_ip': '45.51.123.12',
     'continent': 'North America',
     'country': 'United States,
     'region': 'California',
     'city': 'Santa Monica',
-    'lat': 'XX.XX',
-    'long': '-XXX.XXX',
+    'lat': 0.0,
+    'long': -0.0,
 }
 ```
 
@@ -35,7 +62,7 @@ Body:
 
 ```json
 {
-    session_id: 'XXXX'
+    'session_id' : 123
 }
 ```
 
@@ -55,7 +82,7 @@ Response: `404 Not Found`
 
 ```json
 {
-    'session_id': '865',
+    'session_id': 865,
     'timestamp': new Date()
 }
 ```
@@ -68,7 +95,7 @@ Body:
 
 ```json
 {
-    'event_id': 'XXXX'
+    'event_id': 4526
 }
 ```
 
@@ -82,7 +109,7 @@ Response: `404 Not Found`
 
 ```json
 {
-    'event_id': 'XXXXX',
+    'event_id': 4526,
     'timestamp': new Date(),
     'reason': 'no fill'
 }
@@ -96,7 +123,7 @@ Body:
 
 ```json
 {
-    'event_id': 'XXXX'
+    'event_id': 4526
 }
 ```
 
@@ -110,7 +137,7 @@ Response: `404 Not Found`
 
 ```json
 {
-    'event_id': 'XXXXX',
+    'event_id': 4526,
     'timestamp': new Date(),
     'error_string': 'some error'
 }
@@ -124,7 +151,7 @@ Body:
 
 ```json
 {
-    'event_id': 'XXXX'
+    'event_id': 4526
 }
 ```
 
@@ -138,7 +165,7 @@ Response: `404 Not Found`
 
 ```json
 {
-    'event_id': 'XXXXX',
+    'event_id': 4526,
     'timestamp': new Date()
 }
 ```
@@ -151,7 +178,7 @@ Body:
 
 ```json
 {
-    'event_id': 'XXXX'
+    'event_id': 4526
 }
 ```
 
