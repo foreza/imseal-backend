@@ -10,11 +10,11 @@ module.exports = {
       },
       device_id: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       isActive: {
         type: Sequelize.BOOLEAN,
-        allowNull: false,
+        allowNull: false
       },
       cellular: {
         type: Sequelize.BOOLEAN
@@ -27,7 +27,7 @@ module.exports = {
       },
       request_ip: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       continent: {
         type: Sequelize.STRING

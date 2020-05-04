@@ -39,18 +39,18 @@ npm run dev-seed-up
 
 ```json
 {
-    'device_id': 'XXX-XXX-XXXXX',  
+    device_id': 'XXX-XXX-XXXXX',  
     'isActive': true,
     'cellular': false,
-    'OS': 'Android',
-    `placement_id' : '380000',
+    'os': 'Android',
+    'placement_id' : '380000',
     'request_ip': '45.51.123.12',
     'continent': 'North America',
-    'country': 'United States,
+    'country': 'United States',
     'region': 'California',
     'city': 'Santa Monica',
     'lat': 0.0,
-    'long': -0.0,
+    'long': -0.0
 }
 ```
 

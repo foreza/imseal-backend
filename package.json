@@ -5,7 +5,9 @@
   "scripts": {
     "start": "NODE_ENV=development && node ./bin/www", 
     "dev-migration-up": "NODE_ENV=development npx sequelize-cli db:migrate",
-    "dev-migration-down": "NODE_ENV=development npx sequelize-cli db:migrate:undo:all"
+    "dev-migration-down": "NODE_ENV=development npx sequelize-cli db:migrate:undo:all",
+    "dev-seed-up": "NODE_ENV=development npx sequelize-cli db:seed:all",
+    "dev-seed-down": "NODE_ENV=development npx sequelize-cli db:seed:undo:all"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
