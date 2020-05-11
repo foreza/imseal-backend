@@ -220,7 +220,7 @@ Once a new POST to /event is called, the old event id should be discarded and th
 
 **Sample Request Body:**
 
-Example URL: /event/4526
+Example URL: /event/
 
 ```json
 {

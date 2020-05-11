@@ -19,9 +19,9 @@ router.post('/:event_id', async (req, res, next) => {
     const event_id = req.params.event_id;
     const event_enum_type = req.body.type;
 
+    console.log(`received event req: ${req.body}`)
+
     switch (event_enum_type) {
-        case 0:
-            // nobody should be doing this
         case 1: // Handle Fill
             await eventRepository
             break;
@@ -40,8 +40,6 @@ router.post('/:event_id', async (req, res, next) => {
     }
 
     // const event_id = eventRepository // TODO: do something
-
-    console.log(`returned event_id: ${event_id}` )
     res.sendStatus(200);
 })
 
