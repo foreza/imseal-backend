@@ -282,7 +282,7 @@ Response: `404 Not Found`
 
 
 
-### GET `/events/:sessionId/`
+### GET `/events/session/:sessionId/`
 
 Gets all specific events based off of the session ID provided.  
 Takes in additional args (v2) to only retrieve specific events.  
@@ -322,9 +322,9 @@ Body:
 **Fail:** `404 Not Found`
 
 
-### [wip] GET: /event/:event_id
+### GET: /event/:event_id
 
-WIP - Provide Event ID as path.
+Provide Event ID as path.
 
 Sample Request: GET /event/1823781
 
