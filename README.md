@@ -70,6 +70,111 @@ Body:
 
 Response: `404 Not Found`
 
+### GET: `/session/:id`
+
+Example GET: /session/123
+
+**Sample Request Body:**
+
+```json
+{}
+```
+
+**Success:**
+
+Response: `201 Created`
+
+Body:
+
+```json
+{
+    id: 123,
+    device_id': 'XXX-XXX-XXXXX',  
+    'isActive': true,
+    'cellular': false,
+    'os': 'Android',
+    'placement_id' : '380000',
+    'request_ip': '45.51.123.12',
+    'continent': 'North America',
+    'country': 'United States',
+    'region': 'California',
+    'city': 'Santa Monica',
+    'lat': 0.0,
+    'long': -0.0
+}
+```
+
+**Fail:**
+
+Response: `404 Not Found`
+
+### GET: `/session`
+
+Get sessions. Limited to the most recent **50** sessions.
+
+**Sample Request Body:**
+
+```json
+{}
+```
+
+**Success:**
+
+Response: `200 Success`
+
+Body:
+
+```json
+[
+    {
+        device_id': 'XXX-XXX-XXXXX',  
+        'isActive': true,
+        'cellular': true,
+        'os': 'Android',
+        'placement_id' : '123',
+        'request_ip': '45.51.123.12',
+        'continent': 'North America',
+        'country': 'United States',
+        'region': 'California',
+        'city': 'Santa Monica',
+        'lat': 0.0,
+        'long': -0.0
+    },
+    {
+        device_id': 'XXX-XXX-XXXXX',  
+        'isActive': true,
+        'cellular': false,
+        'os': 'iOS',
+        'placement_id' : '456',
+        'request_ip': '45.51.123.12',
+        'continent': 'North America',
+        'country': 'United States',
+        'region': 'California',
+        'city': 'Santa Monica',
+        'lat': 0.0,
+        'long': -0.0
+    },
+    {
+        device_id': 'XXX-XXX-XXXXX',  
+        'isActive': true,
+        'cellular': false,
+        'os': 'Android',
+        'placement_id' : '789',
+        'request_ip': '45.51.123.12',
+        'continent': 'North America',
+        'country': 'United States',
+        'region': 'California',
+        'city': 'Santa Rosa',
+        'lat': 0.0,
+        'long': -0.0
+    }
+]
+```
+
+**Fail:**
+
+Response: `404 Not Found`
+
 ----
 
 ## EVENT API
@@ -78,10 +183,14 @@ Response: `404 Not Found`
 
 ### POST: `/event`
 
+This route will create a new event and return an event ID to be used for the remainder of the ad request lifecycle.
+All other events (fill, no fill, error, impression, etc) will utilize the event ID provided.
+
 **Sample Request Body:**
 
 ```json
 {
+    'type': 0,
     'session_id': 865,
     'timestamp': new Date()
 }
@@ -103,46 +212,60 @@ Body:
 
 Response: `404 Not Found`
 
-### POST: `/event/nofill/`
+### POST: `/event/:event_id`
+
+This route will create a specified event provided a type and some optional data.
+This will work in conjunction with the prior event (for POST /event) by utilizing the returned event ID.
+Once a new POST to /event is called, the old event id should be discarded and the new event ID should be utilized.
 
 **Sample Request Body:**
 
+Example URL: /event/4526
+
 ```json
 {
-    'event_id': 4526,
+    'type': 1,
     'timestamp': new Date(),
-    'reason': 'no fill'
 }
 ```
 
-**Success:**
-
-Response: `201 Created`
-
-Body:
-
 ```json
 {
-    'event_id': 4526
+    'type': 2,
+    'timestamp': new Date(),
+    'reason_string': 'some reason for no fill',
 }
 ```
 
-**Fail:**
-
-Response: `404 Not Found`
-
-### POST: `/event/error/`
-
-**Sample Request Body:**
-
 ```json
 {
-    'event_id': 4526,
+    'type': 3,
     'timestamp': new Date(),
     'error_string': 'some error'
 }
 ```
 
+```json
+{
+    'type': 4,
+    'timestamp': new Date(),
+    'imp_string': 'some info about impression if available'
+}
+```
+
+Type descriptions:
+
+| Enum | Event      | Description                              |
+|------|------------|------------------------------------------|
+| 0    | Request    | Ad Request made. New event ID generated. |
+| 1    | Fill       | Ad Request filled.                       |
+| 2    | No Fill    | Ad Request did not fill.                 |
+| 3    | Error      | Error with Ad Request.                   |
+| 4    | Impression | Received Ad Impression.                  |
+
+For the `info` field, depends on client side implementation.
+
+
 **Success:**
 
 Response: `201 Created`
@@ -150,41 +273,14 @@ Response: `201 Created`
 Body:
 
 ```json
-{
-    'event_id': 4526
-}
+{ }
 ```
 
 **Fail:**
 
 Response: `404 Not Found`
 
-### POST: `/event/load/`
 
-**Sample Request Body:**
-
-```json
-{
-    'event_id': 4526,
-    'timestamp': new Date()
-}
-```
-
-**Success:**
-
-Response: `201 Created`
-
-Body:
-
-```json
-{
-    'event_id': 4526
-}
-```
-
-**Fail:**
-
-Response: `404 Not Found`
 
 ### GET `/events/:sessionId/`
 
@@ -228,7 +324,7 @@ Body:
 
 ### [wip] GET: /event/:event_id
 
-WIPProvide Event ID as path.
+WIP - Provide Event ID as path.
 
 Sample Request: GET /event/1823781
 
