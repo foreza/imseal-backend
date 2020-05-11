@@ -1,5 +1,5 @@
-const express = include('express');
-const router = express.Router;
+const express = require('express')
+const router = express.Router();
 const eventRepository = require('../repository/eventUnit');
 
 
@@ -7,7 +7,7 @@ router.post('/', async (req, res, next) => {
 
     // TODO: sanitize / perform initial validation on body
     console.log(`received event req: ${req.body}`)
-    const event_id = await eventRepository.insertNewEventForSessionId(req.body);
+    const event_id = (await eventRepository.insertNewEventForSessionId(req.body))[0][0];
     console.log(`returned event_id: ${event_id}` )
     res.json(event_id);
 })
@@ -39,7 +39,7 @@ router.post('/:event_id', async (req, res, next) => {
 
     }
 
-    const event_id = eventRepository // TODO: do something
+    // const event_id = eventRepository // TODO: do something
 
     console.log(`returned event_id: ${event_id}` )
     res.sendStatus(200);
@@ -72,3 +72,6 @@ router.get('/session/:session_id', async (req, res, next) => {
     }
     
 })
+
+
+module.exports = router;

@@ -1,10 +1,10 @@
-const db = require('..models/index')
+const db = require('../models/index')
 const eventRepository = {};
 
 const insertNewEventForSessionIdQuery = 
 `INSERT into "AdRequestEvents" (type, timestamp, session_id)
 VALUES ( :type, :timestamp, :session_id)
-RETURNING id;`
+RETURNING event_id;`
 
 eventRepository.insertNewEventForSessionId = async(body) => {
     const event_id = await db.sequelize.query(insertNewEventForSessionIdQuery, {
