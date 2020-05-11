@@ -5,7 +5,9 @@ const eventRepository = require('../repository/eventUnit');
 
 router.post('/', async (req, res, next) => {
 
-    const event_id = eventRepository // TODO: do something
+    // TODO: sanitize / perform initial validation on body
+    console.log(`received event req: ${req.body}`)
+    const event_id = await eventRepository.insertNewEventForSessionId(req.body);
     console.log(`returned event_id: ${event_id}` )
     res.json(event_id);
 })
