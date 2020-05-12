@@ -190,7 +190,6 @@ All other events (fill, no fill, error, impression, etc) will utilize the event 
 
 ```json
 {
-    'type': 0,
     'session_id': 865,
     'timestamp': new Date()
 }

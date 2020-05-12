@@ -1,7 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const AdRequestEvent = sequelize.define('AdRequestEvent', {
-    type: DataTypes.NUMBER,
     timestamp: DataTypes.DATE,
     sessionId: DataTypes.NUMBER
   }, {});

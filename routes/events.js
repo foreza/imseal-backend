@@ -21,25 +21,29 @@ router.post('/:event_id', async (req, res, next) => {
 
     console.log(`received event req: ${req.body}`)
 
+    // TODO: Add error handling within the switch statements
     switch (event_enum_type) {
         case 1: // Handle Fill
-            await eventRepository
+            console.log(`handle fill`)
+            await eventRepository.insertNewAdLoadEventForEventId(req.body, event_id);
             break;
         case 2: // Handle No Fill
-            await eventRepository
+            console.log(`handle no fill`)
+            await eventRepository.insertNewAdNoFillEventForEventId(req.body, event_id);
             break;
         case 3: // Handle Error
-            await eventRepository
+            console.log(`handle error (wip)`)
+            // await eventRepository
             break;
         case 4: // Handle Impression
-            await eventRepository
+            console.log(`handle impression (wip)`)
+            // await eventRepository
             break;
         default:
+            console.log(`default case`)
             break;
-
     }
 
-    // const event_id = eventRepository // TODO: do something
     res.sendStatus(200);
 })
 

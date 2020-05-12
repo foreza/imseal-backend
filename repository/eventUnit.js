@@ -2,8 +2,8 @@ const db = require('../models/index')
 const eventRepository = {};
 
 const insertNewEventForSessionIdQuery = 
-`INSERT into "AdRequestEvents" (type, timestamp, session_id)
-VALUES ( :type, :timestamp, :session_id)
+`INSERT into "AdRequestEvents" (timestamp, session_id)
+VALUES (:timestamp, :session_id)
 RETURNING event_id;`
 
 eventRepository.insertNewEventForSessionId = async(body) => {
@@ -11,8 +11,31 @@ eventRepository.insertNewEventForSessionId = async(body) => {
         type: db.sequelize.QueryTypes.INSERT,
         replacements: { ...body}
     })
-
     return event_id;
+}
+
+
+const insertNewAdLoadEventForEventIdQuery = 
+`INSERT into "AdLoadEvents" (type, timestamp, event_id)
+VALUES ( :type, :timestamp, :event_id);`
+
+eventRepository.insertNewAdLoadEventForEventId = async(body, event_id) => {
+    await db.sequelize.query(insertNewAdLoadEventForEventIdQuery, {
+        type: db.sequelize.QueryTypes.INSERT,
+        replacements: { ...body, event_id: event_id}
+    })
+}
+
+
+const insertNewAdNoFillEventForEventIdQuery = 
+`INSERT into "AdNoFillEvents" (type, timestamp, event_id)
+VALUES ( :type, :timestamp, :event_id);`
+
+eventRepository.insertNewAdNoFillEventForEventId = async(body, event_id) => {
+    await db.sequelize.query(insertNewAdNoFillEventForEventIdQuery, {
+        type: db.sequelize.QueryTypes.INSERT,
+        replacements: { ...body, event_id: event_id}
+    })
 }
 
 
