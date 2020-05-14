@@ -23,6 +23,8 @@ router.get('/:sessionId', async (req, res, next) => {
 
     const session = await sessionRepository.retrieveSessionForSessionID(req.params.sessionId);
     res.json(session);
+
+    // TODO: What is the session doesn't exist?
 })
 
 module.exports = router;

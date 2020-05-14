@@ -48,15 +48,20 @@ router.post('/:event_id', async (req, res, next) => {
 })
 
 
-// TODO: Gets a specific event based off of the session ID provided.  
+// TODO: Gets a specific event collection based off of the session ID provided.  
+/*
+Ad Events (in this context) are meaningless by themselves.
+This will retrieve a specific event id, and then look within the other event tables for possible matches.
+To be implemented in V2 since we don't need this quite yet.
+*/
 router.get('/:event_id', async (req, res, next) => {
 
     const event_id = req.params.event_id;
 
-    // const data = await eventRepository // do something
+    const events = await eventRepository // do something
 
-    if (data.length > 0){
-        res.json(data);
+    if (events.length > 0){
+        res.json(events);
     }
     
 })
@@ -65,13 +70,10 @@ router.get('/:event_id', async (req, res, next) => {
 // Gets all specific events based off of the session ID provided.  
 router.get('/session/:session_id', async (req, res, next) => {
 
-    const session_id = req.params.session_id;
+    const events = await eventRepository.retrieveAllEventsForSessionId(req.params.session_id)
+    res.json(events);
 
-    // const data = await eventRepository // do something
-
-    if (data.length > 0){
-        res.json(data);
-    }
+    // TODO: what if we don't have anything returned
     
 })
 
