@@ -20,7 +20,39 @@ sessionRepository.insertSessionForSessionId = async (body) => {
         type: db.sequelize.QueryTypes.INSERT,
         replacements: { ...body, createdAt: new Date() }
     })
-    return sessionId;
+    return sessionId[0][0];
 }
+
+
+const retrieveSessionForSessionIDQuery =
+`SELECT * from "Sessions"
+WHERE (id = :sessionId);`
+
+sessionRepository.retrieveSessionForSessionID = async (id) => {
+    const session = await db.sequelize.query(retrieveSessionForSessionIDQuery, {
+        type: db.sequelize.QueryTypes.SELECT,
+        replacements: { sessionId: id}
+    })
+
+    return session[0];
+}
+
+
+
+const retrieveSessionListWithLimitQuery = 
+`SELECT * from "Sessions"
+ORDER by "createdAt" desc 
+LIMIT :queryLimit;`
+
+
+sessionRepository.retrieveSessionListWithLimit = async(limit) => {
+    const sessionList = await db.sequelize.query(retrieveSessionListWithLimitQuery, {
+        type: db.sequelize.QueryTypes.SELECT,
+        replacements: { queryLimit: limit}
+    })
+
+    return sessionList;
+}
+
 
 module.exports = sessionRepository;        // Export this so we can access this repository unit
