@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="favicon.png">
+    <title>IMSEAL v0</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+</head>
+
+<body>
+
+    <div class="jumbotron">
+
+        <p>Most recent sessions:</p>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">session_id</th>
+                    <th scope="col">device_id</th>
+                    <th scope="col">city</th>
+                    <th scope="col">created</th>
+                    <th scope="col">request_ip</th>
+                    <th scope="col">raw events</th>
+                    <th scope="col">latency calc</th>
+                    <!-- TODO: Add rest of columns in some other form -->
+                </tr>
+            </thead>
+            <tbody id="session-data">
+                <!-- Content should be dynamically generated -->
+            </tbody>
+        </table>
+
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="eventListModal" tabindex="-1" role="dialog" aria-labelledby="eventListModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="eventListModalLabel"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div>
+                            <p>Mean Latency: <span id="mean-latency-label">?</span></p>
+                            <p>Median Latency: <span id="median-latency-label">?</span></p>
+                            <p>Max Latency: <span id="max-latency-label">?</span></p>
+                            <p>Min Latency: <span id="min-latency-label">?</span></p>
+                        </div>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">event_id</th>
+                                    <th scope="col">ad request time</th>
+                                    <th scope="col">ad loaded time</th>
+                                    <th scope="col">ad no filled time</th>
+                                </tr>
+                            </thead>
+                            <tbody id="event-data">
+                                <!-- Content should be dynamically generated -->
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+
+
+    <script>
+
+        $(() => {
+
+            // alert("document ready");
+            $.get("http://127.0.0.1:3000/sessions", (data) => {
+
+                let tableDOM = "";
+
+                console.log(data);
+
+                data.forEach(element => {
+                    tableDOM += generateTableRowDOMForSession(element);
+                });
+
+                $("#session-data").append(tableDOM);
+            });
+        });
+
+
+
+        function generateTableRowDOMForSession(s) {
+
+            const dom =
+                `<tr>
+                <td>${s.id}</td>
+                <td>${s.device_id}</td>
+                <td>${s.city}</td>
+                <td>${s.createdAt}</td>
+                <td>${s.request_ip}</td>
+                <td><a href="/events/session/${s.id}">raw</a></td>
+                <td>
+                    <button onclick="populateDataForEventModal(${s.id})" type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventListModal"> latency details</button>
+              </tr>`
+
+            console.log(dom);
+            return dom;
+
+        }
+
+        function generateTableRowDOMForEvent(e) {
+
+            const dom =
+                `<tr>
+                <td>${e.request_event_id}</td>
+                <td>${e.ad_request_ts}</td>
+                <td>${e.ad_loaded_ts}</td>
+                <td>${e.ad_nofill_ts}</td>
+            </tr>`
+
+            console.log(dom);
+            return dom;
+
+        }
+
+
+        function populateDataForEventModal(sessionId) {
+
+            $("#eventListModalLabel").text(`Event Data for Session ${sessionId}`)
+
+            $.get(`http://127.0.0.1:3000/events/session/${sessionId}`, (data) => {
+
+                let eventTableDOM = "";
+                console.log(data);
+                data.forEach(element => {
+                    eventTableDOM += generateTableRowDOMForEvent(element);
+                });
+
+                $("#event-data").append(eventTableDOM);
+
+
+                
+                const obj = calculateAveragesFromData(data);
+                
+                $("#mean-latency-label").text(obj.mean);
+                $("#median-latency-label").text(obj.median);
+                $("#max-latency-label").text(obj.max);
+                $("#min-latency-label").text(obj.min);
+            });
+
+
+
+
+        }
+
+
+        function calculateAveragesFromData(data) {
+
+            let totalSuccessTime = 0;
+            let totalAdLoaded = 0;
+            let timeCollection = [];
+
+
+            for (var i = 0; i < data.length; ++i) {
+                if (data[i].ad_loaded_ts != null) {
+                    const adLoadDate = new Date(data[i].ad_loaded_ts);
+                    const adRequestDate = new Date(data[i].ad_request_ts);
+                    const diff = adLoadDate - adRequestDate;
+                    timeCollection.push(diff);
+                    totalSuccessTime += (diff);
+                    totalAdLoaded++;
+                }
+            }
+
+            timeCollection.sort();
+
+            return {
+                mean: totalSuccessTime / totalAdLoaded,
+                median: timeCollection[timeCollection.length / 2],
+                max: timeCollection[timeCollection.length - 1],
+                min: timeCollection[0]
+            }
+
+        }
+
+        // function calculateMedianMaxMinFromData(data) {
+
+        //     let timeCollection = [];
+        //     for (var i = 0; i < data.length; ++i) {
+        //         if (data[i].ad_loaded_ts != null) {
+        //             let adLoadDate = new Date(data[i].ad_loaded_ts);
+        //             let adRequestDate = new Date(data[i].ad_request_ts);
+        //             timeCollection.push(adLoadDate - adRequestDate);
+        //         }
+        //     }
+
+        //     timeCollection.sort();
+        //     // console.log("Median is: " + timeCollection[timeCollection.length / 2])
+        //     // console.log("Max is: " + timeCollection[timeCollection.length - 1])
+        //     // console.log("Min is: " + timeCollection[0])
+
+        //     return {
+        //         median: timeCollection[timeCollection.length / 2],
+        //         max: timeCollection[timeCollection.length - 1],
+        //         min: timeCollection[0]
+        //     }
+
+        // }
+
+
+
+
+
+
+
+    </script>
+
+</body>
+
+
+</html>

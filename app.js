@@ -3,18 +3,16 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
 const db = require('./models/index');
 var indexRouter = require('./routes/index');
 var sessionsRouter = require('./routes/sessions');
 var eventsRouter = require('./routes/events');
-
-
+var cors = require('cors')
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+
+
+
 
 // postgres connect
 db.sequelize.authenticate().then(() => {
@@ -29,9 +27,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(cors())
+
 app.use('/', indexRouter);
 app.use('/sessions', sessionsRouter);
 app.use('/events', eventsRouter);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -46,7 +48,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('error.html');
 });
 
 module.exports = app;
