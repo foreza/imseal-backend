@@ -5,7 +5,7 @@ module.exports = {
     return queryInterface.bulkInsert('AdRequestEvents', [
       {
         'session_id': 1,
-        'timestamp': new Date()
+        'timestamp': new Date().getTime()
       }
     ], {});
   },

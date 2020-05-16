@@ -10,7 +10,7 @@ module.exports = {
       },
       timestamp: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.BIGINT
       },
       session_id: {
         type: Sequelize.INTEGER,

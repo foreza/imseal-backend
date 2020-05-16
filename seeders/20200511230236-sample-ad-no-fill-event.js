@@ -7,7 +7,7 @@ module.exports = {
       {
         'type': 2,
         'event_id': 1,    // This is typically inserted by the server
-        'timestamp': new Date(),
+        'timestamp': new Date().getTime()
       }
     ], {});
     /*

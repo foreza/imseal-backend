@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const AdNoFillEvent = sequelize.define('AdNoFillEvent', {
     type: DataTypes.INTEGER,
-    timestamp: DataTypes.DATE,
+    timestamp: DataTypes.BIGINT,
     eventId: DataTypes.INTEGER
   }, {});
   AdNoFillEvent.associate = function(models) {

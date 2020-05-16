@@ -183,8 +183,8 @@
 
             for (var i = 0; i < data.length; ++i) {
                 if (data[i].ad_loaded_ts != null) {
-                    const adLoadDate = new Date(data[i].ad_loaded_ts);
-                    const adRequestDate = new Date(data[i].ad_request_ts);
+                    const adLoadDate = data[i].ad_loaded_ts;
+                    const adRequestDate = data[i].ad_request_ts;
                     const diff = adLoadDate - adRequestDate;
                     timeCollection.push(diff);
                     totalSuccessTime += (diff);
@@ -202,35 +202,6 @@
             }
 
         }
-
-        // function calculateMedianMaxMinFromData(data) {
-
-        //     let timeCollection = [];
-        //     for (var i = 0; i < data.length; ++i) {
-        //         if (data[i].ad_loaded_ts != null) {
-        //             let adLoadDate = new Date(data[i].ad_loaded_ts);
-        //             let adRequestDate = new Date(data[i].ad_request_ts);
-        //             timeCollection.push(adLoadDate - adRequestDate);
-        //         }
-        //     }
-
-        //     timeCollection.sort();
-        //     // console.log("Median is: " + timeCollection[timeCollection.length / 2])
-        //     // console.log("Max is: " + timeCollection[timeCollection.length - 1])
-        //     // console.log("Min is: " + timeCollection[0])
-
-        //     return {
-        //         median: timeCollection[timeCollection.length / 2],
-        //         max: timeCollection[timeCollection.length - 1],
-        //         min: timeCollection[0]
-        //     }
-
-        // }
-
-
-
-
-
 
 
     </script>

@@ -22,7 +22,7 @@ module.exports = {
       },
       timestamp: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.BIGINT
       }
     });
   },
